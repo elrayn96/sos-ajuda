@@ -6,6 +6,23 @@ import type {
 } from "@/types/help-request";
 
 const STORAGE_KEY = "sos-ajuda-requests";
+const MY_REQUESTS_KEY = "sos-ajuda-my-requests";
+
+export function getMyRequestIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(MY_REQUESTS_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function addMyRequestId(id: string): void {
+  if (typeof window === "undefined") return;
+  const existing = getMyRequestIds();
+  localStorage.setItem(MY_REQUESTS_KEY, JSON.stringify([...existing, id]));
+}
 
 function getSeedData(): HelpRequest[] {
   const now = Date.now();
@@ -120,6 +137,7 @@ export function createRequest(data: CreateHelpRequestInput): HelpRequest {
     createdAt: new Date().toISOString(),
   };
   writeStorage([newRequest, ...requests]);
+  addMyRequestId(newRequest.id);
   return newRequest;
 }
 

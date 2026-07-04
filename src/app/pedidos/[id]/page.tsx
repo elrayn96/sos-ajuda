@@ -21,7 +21,7 @@ import {
   statusVariant,
   urgencyVariant,
 } from "@/lib/constants";
-import { getRequestById, updateRequestStatus } from "@/lib/storage";
+import { getRequestById, updateRequestStatus, getMyRequestIds } from "@/lib/storage";
 import { formatRelativeTime } from "@/lib/utils";
 import type { HelpRequest } from "@/types/help-request";
 
@@ -33,11 +33,13 @@ export default function RequestDetailPage() {
 
   const [request, setRequest] = useState<HelpRequest | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [isMyRequest, setIsMyRequest] = useState(false);
 
   useEffect(() => {
     if (!mounted) return;
     const found = getRequestById(id);
     setRequest(found ?? null);
+    setIsMyRequest(getMyRequestIds().includes(id));
     setLoaded(true);
   }, [mounted, id]);
 
@@ -172,9 +174,15 @@ export default function RequestDetailPage() {
 
       <div className="space-y-3 pb-4">
         {request.status === "Pendente" && (
-          <Button size="lg" className="w-full" onClick={handleAccept}>
-            Aceitar pedido
-          </Button>
+          isMyRequest ? (
+            <div className="rounded-lg border border-border bg-muted/40 p-4 text-center text-sm text-muted-foreground">
+              Este é o teu pedido. Aguarda que um voluntário o aceite.
+            </div>
+          ) : (
+            <Button size="lg" className="w-full" onClick={handleAccept}>
+              Aceitar pedido
+            </Button>
+          )
         )}
         {request.status === "Em atendimento" && (
           <Button

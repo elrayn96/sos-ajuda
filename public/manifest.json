@@ -1,10 +1,39 @@
 {
-  "name": "SOS Ajuda",
+  "name": "SOS Ajuda — Assistência de Emergência",
   "short_name": "SOS Ajuda",
-  "description": "Assistência de emergência para comunidades moçambicanas",
+  "description": "Liga pessoas afetadas por cheias a voluntários e doadores em Moçambique. Mobile-first, funciona offline.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f8fafb",
-  "theme_color": "#0a8ec2",
-  "lang": "pt"
+  "theme_color": "#0a8ec4",
+  "lang": "pt",
+  "categories": ["health", "lifestyle", "social"],
+  "icons": [
+    { "src": "/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pedir Ajuda",
+      "short_name": "Pedir Ajuda",
+      "description": "Criar um novo pedido de ajuda de emergência",
+      "url": "/pedir-ajuda",
+      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Ver Pedidos",
+      "short_name": "Pedidos",
+      "description": "Ver todos os pedidos de ajuda",
+      "url": "/pedidos",
+      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
 }
