@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Naeem Julaya",
+    "contact": "868480987",
+    "location": "Maputo",
+    "helpType": "Abrigo",
+    "urgency": "Média",
+    "id": "req_1783168055545_25h8b9l",
+    "status": "Pendente",
+    "createdAt": "2026-07-04T12:27:35.545Z"
+  },
+  {
+    "name": "Armando Massingue",
+    "contact": "852574573",
+    "location": "Laulane",
+    "helpType": "Comida",
+    "urgency": "Alta",
+    "description": "ABC def",
+    "id": "req_1783168053336_qcvrf8q",
+    "status": "Pendente",
+    "createdAt": "2026-07-04T12:27:33.336Z"
+  },
+  {
+    "id": "seed_1",
+    "name": "Ana Machel",
+    "contact": "+258 84 123 4567",
+    "location": "Bairro Munhava, Beira",
+    "helpType": "Água",
+    "urgency": "Alta",
+    "description": "Família com 3 crianças sem água potável há 2 dias.",
+    "status": "Pendente",
+    "createdAt": "2026-07-04T10:20:58.182Z"
+  },
+  {
+    "id": "seed_2",
+    "name": "Carlos Nhamussua",
+    "contact": "+258 86 987 6543",
+    "location": "Ponta Gea, Beira",
+    "helpType": "Medicamentos",
+    "urgency": "Alta",
+    "description": "Idoso precisa de insulina urgentemente.",
+    "status": "Pendente",
+    "createdAt": "2026-07-04T11:35:58.182Z"
+  },
+  {
+    "id": "seed_3",
+    "name": "Fátima Sitoe",
+    "contact": "+258 82 555 1234",
+    "location": "Manga, Beira",
+    "helpType": "Abrigo",
+    "urgency": "Média",
+    "description": "Casa inundada, família de 5 pessoas precisa de abrigo.",
+    "status": "Em atendimento",
+    "createdAt": "2026-07-04T07:20:58.182Z",
+    "acceptedAt": "2026-07-04T08:20:58.182Z"
+  },
+  {
+    "id": "seed_4",
+    "name": "João Macamo",
+    "contact": "+258 87 333 7890",
+    "location": "Praia Nova, Beira",
+    "helpType": "Comida",
+    "urgency": "Média",
+    "description": "Precisamos de alimentos para 2 dias.",
+    "status": "Pendente",
+    "createdAt": "2026-07-04T09:20:58.182Z"
+  },
+  {
+    "id": "seed_5",
+    "name": "Maria Tembe",
+    "contact": "+258 85 222 4567",
+    "location": "Macuti, Beira",
+    "helpType": "Transporte",
+    "urgency": "Baixa",
+    "description": "Precisa de transporte para centro de evacuação.",
+    "status": "Resolvido",
+    "createdAt": "2026-07-03T12:20:58.182Z",
+    "acceptedAt": "2026-07-03T13:20:58.182Z",
+    "resolvedAt": "2026-07-03T14:20:58.182Z"
+  }
+]

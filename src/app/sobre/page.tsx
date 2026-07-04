@@ -1,134 +1,202 @@
 import Link from "next/link";
 import {
+  AlertTriangle,
+  Wifi,
+  Users,
   ArrowRight,
   Heart,
-  Smartphone,
-  Users,
   Zap,
 } from "lucide-react";
 import { ConnectionIndicator } from "@/components/connection-indicator";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
-const flowSteps = [
-  "Uma pessoa cria um pedido de ajuda de emergência",
-  "O pedido aparece na lista pública de pedidos",
-  "Um voluntário abre os detalhes do pedido",
-  "O voluntário aceita o pedido",
-  "O estado muda para \"Em atendimento\"",
-  "O pedido é marcado como \"Resolvido\"",
+const FLOW_STEPS = [
+  {
+    step: "1",
+    title: "Pedir ajuda",
+    description: "A pessoa afectada cria um pedido com tipo, urgência e localização.",
+  },
+  {
+    step: "2",
+    title: "Listagem pública",
+    description: "O pedido aparece na lista para voluntários e doadores próximos.",
+  },
+  {
+    step: "3",
+    title: "Aceitar pedido",
+    description: "Um voluntário abre os detalhes e aceita o pedido.",
+  },
+  {
+    step: "4",
+    title: "Em atendimento",
+    description: "O estado muda para «Em atendimento» e o contacto fica visível.",
+  },
+  {
+    step: "5",
+    title: "Resolvido",
+    description: "Após a ajuda ser entregue, o pedido é marcado como resolvido.",
+  },
 ];
 
 export default function SobrePage() {
   return (
-    <div className="space-y-6 p-4 md:p-8">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-bold">Sobre o SOS Ajuda</h1>
-        <p className="text-muted-foreground">
-          Plataforma de assistência de emergência para comunidades moçambicanas
-          afetadas por inundações.
-        </p>
+    <main className="px-4 pt-6">
+      <header className="mb-6">
+        <div className="mb-3 flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">SOS Ajuda</h1>
+            <p className="text-sm text-muted-foreground">Pitch — 3 minutos</p>
+          </div>
+        </div>
         <ConnectionIndicator />
       </header>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-urgent" />
-            O problema
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-muted-foreground">
-          <p>
-            Quando cheias atingem bairros em Moçambique, famílias precisam de
-            água, comida, abrigo e medicamentos — mas os pedidos ficam espalhados
-            por WhatsApp e chamadas, sem prioridade nem coordenação. Voluntários
-            não sabem quem ajudar primeiro.
-          </p>
-        </CardContent>
-      </Card>
+      <section className="mb-6">
+        <Card className="border-accent/20 bg-accent/5">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle
+                className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                aria-hidden="true"
+              />
+              <div>
+                <h2 className="font-semibold">O problema</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Durante cheias e emergências em Moçambique, milhares de
+                  famílias ficam isoladas sem água, comida ou medicamentos.
+                  Quem precisa de ajuda não sabe como pedir. Quem quer ajudar
+                  não sabe onde ir.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" />
-            A solução
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-muted-foreground">
-          <p>
-            O SOS Ajuda liga quem precisa de ajuda a voluntários e doadores
-            próximos. Cada pedido tem tipo, urgência, localização e contacto
-            visível — tudo num só lugar, em português, no telemóvel.
-          </p>
-        </CardContent>
-      </Card>
+      <section className="mb-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Heart
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <div>
+                <h2 className="font-semibold">A solução</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  SOS Ajuda conecta pessoas afectadas com voluntários e doadores
+                  próximos. Pedidos de ajuda são criados, listados e aceites —
+                  com acompanhamento até à resolução completa.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Smartphone className="h-5 w-5 text-primary" />
-            Porque funciona em 3G
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-muted-foreground">
-          <p>Interface leve, sem imagens pesadas, sem vídeos, sem dependências desnecessárias.</p>
-          <ul className="list-inside list-disc space-y-1 text-sm">
-            <li>Dados guardados localmente (LocalStorage)</li>
-            <li>Componentes mínimos e carregamento rápido</li>
-            <li>Tipografia grande e alvos de toque acessíveis (44px+)</li>
-            <li>Funciona sem backend nem autenticação</li>
-          </ul>
-        </CardContent>
-      </Card>
+      <section className="mb-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Wifi
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <div>
+                <h2 className="font-semibold">Porque funciona em 3G</h2>
+                <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" aria-hidden="true" />
+                    Interface leve, sem imagens pesadas
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" aria-hidden="true" />
+                    Pedidos offline entram numa fila segura no dispositivo
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" aria-hidden="true" />
+                    API partilhada sincroniza vítimas e voluntários
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" aria-hidden="true" />
+                    Textos curtos, botões grandes, navegação simples
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-warning-foreground" />
-            Impacto
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-muted-foreground">
-          <p>
-            Resposta mais rápida a emergências reais. Pedidos urgentes ficam
-            visíveis imediatamente. Voluntários aceitam e resolvem pedidos com
-            rastreio claro — da criação à resolução.
-          </p>
-        </CardContent>
-      </Card>
+      <section className="mb-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Users
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <div>
+                <h2 className="font-semibold">Impacto</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Cada pedido aceite significa uma família com água, abrigo ou
+                  medicamentos. Voluntários locais actuam mais rápido que
+                  organizações centralizadas. A plataforma escala com a
+                  comunidade — quanto mais pessoas usam, mais ajuda chega.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ArrowRight className="h-5 w-5 text-success" />
-            Fluxo end-to-end
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ol className="space-y-3">
-            {flowSteps.map((step, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  {i + 1}
-                </span>
-                <span className="pt-0.5 text-sm text-muted-foreground">
-                  {step}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </CardContent>
-      </Card>
+      <section className="mb-6">
+        <h2 className="mb-3 text-lg font-semibold">Fluxo completo</h2>
+        <ol className="space-y-3">
+          {FLOW_STEPS.map(({ step, title, description }) => (
+            <li key={step}>
+              <Card>
+                <CardContent className="flex gap-3 p-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    {step}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-      <div className="grid gap-3 pb-4">
-        <Button asChild size="lg" className="w-full">
-          <Link href="/pedir-ajuda">Demonstrar: Pedir Ajuda</Link>
+      <section className="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-4">
+        <p className="text-center text-sm font-medium text-primary">
+          Hackathon Cursor · Categoria 3 — SOS / Reunião · Moçambique
+        </p>
+      </section>
+
+      <div className="flex flex-col gap-3 pb-4">
+        <Button asChild size="lg" variant="accent">
+          <Link href="/pedir-ajuda">
+            Demonstrar: Pedir Ajuda
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </Button>
-        <Button asChild variant="outline" size="lg" className="w-full">
-          <Link href="/pedidos">Demonstrar: Quero Ajudar</Link>
+        <Button asChild size="lg">
+          <Link href="/pedidos">
+            Demonstrar: Quero Ajudar
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </Button>
       </div>
-    </div>
+    </main>
   );
 }

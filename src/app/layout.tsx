@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { BottomNav, TopNav } from "@/components/navigation";
+import { MobileNav } from "@/components/mobile-nav";
 import { StorageInitializer } from "@/components/storage-initializer";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "SOS Ajuda — Assistência de Emergência",
   description:
-    "Plataforma mobile-first para ligar pessoas afetadas por cheias a voluntários e doadores em Moçambique.",
+    "Plataforma mobile-first para conectar pessoas afetadas por cheias com voluntários e doadores em Moçambique.",
   manifest: "/manifest.json",
 };
 
@@ -14,7 +14,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0a8ec4",
+  themeColor: "#0d6e56",
 };
 
 export default function RootLayout({
@@ -24,13 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
-      <body>
+      <body className="min-h-screen antialiased">
         <StorageInitializer>
-          <TopNav />
-          <main className="mx-auto min-h-screen max-w-lg pb-24 md:max-w-4xl md:pb-8">
+          <div className="mx-auto min-h-screen max-w-lg pb-20">
             {children}
-          </main>
-          <BottomNav />
+          </div>
+          <MobileNav />
         </StorageInitializer>
       </body>
     </html>

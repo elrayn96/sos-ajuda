@@ -1,51 +1,85 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap");
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-urgent: var(--urgent);
+  --color-urgent-foreground: var(--urgent-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
 
-@layer base {
+:root {
+  --background: #f8faf9;
+  --foreground: #0f1f1a;
+  --card: #ffffff;
+  --card-foreground: #0f1f1a;
+  --primary: #0d6e56;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f4f0;
+  --secondary-foreground: #0d4a3a;
+  --muted: #eef2f1;
+  --muted-foreground: #5a6b65;
+  --accent: #c2410c;
+  --accent-foreground: #ffffff;
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --border: #d4e0dc;
+  --input: #d4e0dc;
+  --ring: #0d6e56;
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --warning: #ca8a04;
+  --warning-foreground: #ffffff;
+  --urgent: #dc2626;
+  --urgent-foreground: #ffffff;
+  --radius: 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-    --primary: 199 89% 38%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 18% 93%;
-    --secondary-foreground: 215 25% 25%;
-    --muted: 210 16% 94%;
-    --muted-foreground: 215 14% 45%;
-    --accent: 199 60% 95%;
-    --accent-foreground: 199 89% 30%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 152 60% 38%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 45%;
-    --warning-foreground: 0 0% 100%;
-    --urgent: 0 72% 51%;
-    --urgent-foreground: 0 0% 100%;
-    --border: 214 20% 88%;
-    --input: 214 20% 88%;
-    --ring: 199 89% 38%;
-    --radius: 0.75rem;
-    --font-sans: "DM Sans", system-ui, sans-serif;
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
+    --background: #0a1210;
+    --foreground: #ecf3f0;
+    --card: #111c19;
+    --card-foreground: #ecf3f0;
+    --primary: #2dd4a8;
+    --primary-foreground: #0a1210;
+    --secondary: #1a2e28;
+    --secondary-foreground: #ecf3f0;
+    --muted: #1a2e28;
+    --muted-foreground: #94a8a1;
+    --accent: #ea580c;
+    --accent-foreground: #ffffff;
+    --border: #2a3f38;
+    --input: #2a3f38;
+    --ring: #2dd4a8;
   }
 }
 
-@layer utilities {
-  .safe-bottom {
-    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
-  }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

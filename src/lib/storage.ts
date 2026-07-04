@@ -1,180 +1,106 @@
-import { generateId } from "@/lib/utils";
-import type {
-  CreateHelpRequestInput,
-  HelpRequest,
-  RequestStatus,
-} from "@/types/help-request";
+import type { CreateHelpRequestInput, HelpRequest, RequestStatus } from "@/types/help-request";
+import { getSeedData } from "@/lib/seed-data";
 
-const STORAGE_KEY = "sos-ajuda-requests";
-const MY_REQUESTS_KEY = "sos-ajuda-my-requests";
+const CACHE_KEY = "sos-ajuda-cache-v2";
+const QUEUE_KEY = "sos-ajuda-offline-queue";
 
-export function getMyRequestIds(): string[] {
+type PendingOperation =
+  | { kind: "create"; request: HelpRequest }
+  | { kind: "status"; id: string; status: RequestStatus };
+
+function readCache(): HelpRequest[] {
   if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(MY_REQUESTS_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
-  } catch {
-    return [];
-  }
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY) || "[]"); } catch { return []; }
 }
 
-function addMyRequestId(id: string): void {
-  if (typeof window === "undefined") return;
-  const existing = getMyRequestIds();
-  localStorage.setItem(MY_REQUESTS_KEY, JSON.stringify([...existing, id]));
+function writeCache(requests: HelpRequest[]) {
+  if (typeof window !== "undefined") localStorage.setItem(CACHE_KEY, JSON.stringify(requests));
 }
 
-function getSeedData(): HelpRequest[] {
-  const now = Date.now();
-  return [
-    {
-      id: "seed_1",
-      name: "Maria João",
-      contact: "+258 84 123 4567",
-      location: "Bairro Manga, Beira",
-      helpType: "Água",
-      urgency: "Alta",
-      description: "Família de 5 sem água potável há 2 dias.",
-      status: "Pendente",
-      createdAt: new Date(now - 15 * 60000).toISOString(),
-    },
-    {
-      id: "seed_2",
-      name: "Carlos Nhamirre",
-      contact: "+258 86 987 6543",
-      location: "Praça Nova, Quelimane",
-      helpType: "Medicamentos",
-      urgency: "Alta",
-      description: "Idoso precisa de insulina urgentemente.",
-      status: "Pendente",
-      createdAt: new Date(now - 45 * 60000).toISOString(),
-    },
-    {
-      id: "seed_3",
-      name: "Ana Sitoe",
-      contact: "+258 82 555 1234",
-      location: "Matola, Maputo",
-      helpType: "Comida",
-      urgency: "Média",
-      description: "3 crianças pequenas, comida escassa.",
-      status: "Em atendimento",
-      createdAt: new Date(now - 3 * 3600000).toISOString(),
-      acceptedAt: new Date(now - 2 * 3600000).toISOString(),
-    },
-    {
-      id: "seed_4",
-      name: "Pedro Macuácua",
-      contact: "+258 87 333 7890",
-      location: "Chokwé, Gaza",
-      helpType: "Abrigo",
-      urgency: "Média",
-      description: "Casa inundada, família no telhado.",
-      status: "Pendente",
-      createdAt: new Date(now - 90 * 60000).toISOString(),
-    },
-    {
-      id: "seed_5",
-      name: "Fátima Abdula",
-      contact: "+258 84 222 3344",
-      location: "Ilha de Moçambique",
-      helpType: "Transporte",
-      urgency: "Baixa",
-      description: "Precisa de transporte para centro de saúde.",
-      status: "Resolvido",
-      createdAt: new Date(now - 24 * 3600000).toISOString(),
-      acceptedAt: new Date(now - 23 * 3600000).toISOString(),
-      resolvedAt: new Date(now - 22 * 3600000).toISOString(),
-    },
-  ];
-}
-
-function readStorage(): HelpRequest[] {
+function readQueue(): PendingOperation[] {
   if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch { return []; }
+}
+
+function enqueue(operation: PendingOperation) {
+  localStorage.setItem(QUEUE_KEY, JSON.stringify([...readQueue(), operation]));
+}
+
+export function initializeStorage() {
+  if (readCache().length === 0) writeCache(getSeedData());
+}
+
+export async function syncPendingOperations() {
+  if (typeof window === "undefined" || !navigator.onLine) return;
+  const queue = readQueue();
+  let completed = 0;
+  for (const operation of queue) {
+    try {
+      const response = operation.kind === "create"
+        ? await fetch("/api/requests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(operation.request) })
+        : await fetch(`/api/requests/${operation.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: operation.status }) });
+      if (!response.ok) break;
+      completed++;
+    } catch { break; }
+  }
+  if (completed) localStorage.setItem(QUEUE_KEY, JSON.stringify(queue.slice(completed)));
+}
+
+export async function getRequests(): Promise<HelpRequest[]> {
+  initializeStorage();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw) as HelpRequest[];
+    await syncPendingOperations();
+    const response = await fetch("/api/requests", { cache: "no-store" });
+    if (!response.ok) throw new Error();
+    const requests = await response.json() as HelpRequest[];
+    writeCache(requests);
+    return requests;
   } catch {
-    return [];
+    return readCache().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 }
 
-function writeStorage(requests: HelpRequest[]): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(requests));
+export async function getRequestById(id: string): Promise<HelpRequest | undefined> {
+  try {
+    const response = await fetch(`/api/requests/${id}`, { cache: "no-store" });
+    if (!response.ok) throw new Error();
+    const request = await response.json() as HelpRequest;
+    writeCache([request, ...readCache().filter((item) => item.id !== id)]);
+    return request;
+  } catch { return readCache().find((request) => request.id === id); }
 }
 
-export function initializeStorage(): HelpRequest[] {
-  const existing = readStorage();
-  if (existing.length === 0) {
-    const seed = getSeedData();
-    writeStorage(seed);
-    return seed;
-  }
-  return existing;
+export async function createRequest(data: CreateHelpRequestInput): Promise<HelpRequest> {
+  const request: HelpRequest = { ...data, id: `req_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`, status: "Pendente", createdAt: new Date().toISOString() };
+  writeCache([request, ...readCache()]);
+  try {
+    const response = await fetch("/api/requests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
+    if (!response.ok) throw new Error();
+    return await response.json();
+  } catch { enqueue({ kind: "create", request }); return request; }
 }
 
-export function getRequests(): HelpRequest[] {
-  const requests = readStorage();
-  if (requests.length === 0) {
-    return initializeStorage();
-  }
-  return requests.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+export async function updateRequestStatus(id: string, status: RequestStatus): Promise<HelpRequest | undefined> {
+  const cache = readCache();
+  const index = cache.findIndex((request) => request.id === id);
+  if (index < 0) return undefined;
+  const updated = { ...cache[index], status };
+  if (status === "Em atendimento" && !updated.acceptedAt) updated.acceptedAt = new Date().toISOString();
+  if (status === "Resolvido" && !updated.resolvedAt) updated.resolvedAt = new Date().toISOString();
+  cache[index] = updated;
+  writeCache(cache);
+  try {
+    const response = await fetch(`/api/requests/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) });
+    if (!response.ok) throw new Error();
+    return await response.json();
+  } catch { enqueue({ kind: "status", id, status }); return updated; }
 }
 
-export function getRequestById(id: string): HelpRequest | undefined {
-  return getRequests().find((r) => r.id === id);
-}
-
-export function createRequest(data: CreateHelpRequestInput): HelpRequest {
-  const requests = getRequests();
-  const newRequest: HelpRequest = {
-    ...data,
-    id: generateId(),
-    status: "Pendente",
-    createdAt: new Date().toISOString(),
-  };
-  writeStorage([newRequest, ...requests]);
-  addMyRequestId(newRequest.id);
-  return newRequest;
-}
-
-export function updateRequestStatus(
-  id: string,
-  status: RequestStatus
-): HelpRequest | undefined {
-  const requests = getRequests();
-  const index = requests.findIndex((r) => r.id === id);
-  if (index === -1) return undefined;
-
-  const updated: HelpRequest = { ...requests[index], status };
-  const now = new Date().toISOString();
-
-  if (status === "Em atendimento" && !updated.acceptedAt) {
-    updated.acceptedAt = now;
-  }
-  if (status === "Resolvido") {
-    updated.resolvedAt = now;
-    if (!updated.acceptedAt) {
-      updated.acceptedAt = now;
-    }
-  }
-
-  requests[index] = updated;
-  writeStorage(requests);
-  return updated;
-}
-
-export function getRequestStats() {
-  const requests = getRequests();
+export function getRequestStats(requests: HelpRequest[]) {
   return {
-    urgent: requests.filter(
-      (r) => r.urgency === "Alta" && r.status !== "Resolvido"
-    ).length,
+    urgent: requests.filter((r) => r.urgency === "Alta" && r.status !== "Resolvido").length,
     inProgress: requests.filter((r) => r.status === "Em atendimento").length,
     resolved: requests.filter((r) => r.status === "Resolvido").length,
-    total: requests.length,
+    pending: requests.filter((r) => r.status === "Pendente").length,
   };
 }

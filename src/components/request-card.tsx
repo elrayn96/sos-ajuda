@@ -1,64 +1,63 @@
-"use client";
-
+import Link from "next/link";
+import type { HelpRequest } from "@/types/help-request";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  formatRelativeTime,
   getHelpTypeIcon,
-  getStatusBadgeVariant,
-  getUrgencyBadgeVariant,
-} from "@/lib/request-helpers";
-import { formatRelativeTime } from "@/lib/utils";
-import type { HelpRequest } from "@/types/help-request";
-import { Clock, MapPin } from "lucide-react";
-import Link from "next/link";
+  getStatusVariant,
+  getUrgencyVariant,
+} from "@/lib/format";
+import { MapPin, Clock } from "lucide-react";
 
 interface RequestCardProps {
   request: HelpRequest;
 }
 
 export function RequestCard({ request }: RequestCardProps) {
-  const Icon = getHelpTypeIcon(request.helpType);
-
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/20 group">
+    <Card className="overflow-hidden">
       <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-            <Icon className="h-5 w-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-foreground">
-                {request.helpType}
-              </span>
-              <Badge variant={getUrgencyBadgeVariant(request.urgency)}>
-                {request.urgency}
-              </Badge>
-              <Badge variant={getStatusBadgeVariant(request.status)}>
-                {request.status}
-              </Badge>
-            </div>
-            <div className="mb-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0" />
-              <span className="truncate">{request.location}</span>
-            </div>
-            {request.description && (
-              <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
-                {request.description}
-              </p>
-            )}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{formatRelativeTime(request.createdAt)}</span>
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xl" aria-hidden="true">
+              {getHelpTypeIcon(request.helpType)}
+            </span>
+            <div>
+              <p className="font-semibold text-foreground">{request.helpType}</p>
+              <p className="text-sm text-muted-foreground">{request.name}</p>
             </div>
           </div>
+          <div className="flex flex-col items-end gap-1">
+            <Badge variant={getUrgencyVariant(request.urgency)}>
+              {request.urgency}
+            </Badge>
+            <Badge variant={getStatusVariant(request.status)}>
+              {request.status}
+            </Badge>
+          </div>
         </div>
-        <div className="mt-4">
-          <Button asChild variant="outline" className="w-full">
-            <Link href={`/pedidos/${request.id}`}>Ver detalhes</Link>
-          </Button>
+
+        <div className="mt-3 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span>{request.location}</span>
+          </div>
+          {request.description && (
+            <p className="line-clamp-2 text-sm text-foreground/80">
+              {request.description}
+            </p>
+          )}
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span>{formatRelativeTime(request.createdAt)}</span>
+          </div>
         </div>
+
+        <Button asChild variant="outline" className="mt-4 w-full">
+          <Link href={`/pedidos/${request.id}`}>Ver detalhes</Link>
+        </Button>
       </CardContent>
     </Card>
   );
